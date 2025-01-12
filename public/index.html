@@ -5,118 +5,253 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Story Generator</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            color: #333;
-            text-align: center;
-            padding: 20px;
+            font-family: 'Lora', serif;
+            background: #f0e6d2;
+            color: #3a3a3a;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
+
+        .book {
+            width: 800px;
+            height: 600px;
+            background: #f9f3e3;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            height: 100%;
+            width: 2px;
+            background: rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .page {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            transition: transform 0.6s;
+            backface-visibility: hidden;
+            overflow-y: auto;
+            background: 
+                linear-gradient(to right, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 10%),
+                linear-gradient(to left, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 10%);
+        }
+
+        .page-left {
+            left: 0;
+            transform-origin: right center;
+        }
+
+        .page-right {
+            right: 0;
+            transform-origin: left center;
+        }
+
+        .content {
+            max-width: 100%;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            color: #2c1e0f;
+        }
+
         h1 {
-            color: #4a90e2;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
         }
-        input, select {
-            padding: 10px;
-            margin: 10px;
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        select, input[type="number"], input[type="range"] {
+            width: 100%;
+            padding: 0.5rem;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            width: calc(100% - 24px);
-            max-width: 300px;
+            border-radius: 4px;
+            font-size: 1rem;
         }
+
         button {
-            padding: 10px 20px;
-            background-color: #4a90e2;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #8b4513;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
+            font-size: 1rem;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
+
         button:hover {
-            background-color: #357ab8;
+            background-color: #6b3100;
         }
-        #storyText {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
-            display: none;
+
+        #story {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-align: justify;
+            white-space: pre-wrap; /* Preserves line breaks */
         }
-        #loading {
-            margin-top: 20px;
-            color: #666;
+
+        .credits {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            text-align: center;
+            color: #555;
+        }
+
+        .credits a {
+            color: #8b4513;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .credits a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 840px) {
+            .book {
+                width: 90vw;
+                height: 80vh;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .book {
+                width: 95vw;
+                height: 90vh;
+            }
+
+            .page {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-
-    <h1>AI Story Generator</h1>
-    <form id="storyForm">
-        <label for="genre">Select Genre:</label>
-        <select id="genre" required>
-            <option value="">--Choose a Genre--</option>
-            <option value="fantasy">Fantasy</option>
-            <option value="sci-fi">Science Fiction</option>
-            <option value="mystery">Mystery</option>
-            <option value="romance">Romance</option>
-        </select>
-        
-        <label for="wordCount">Word Count (50 to 1000):</label>
-        <input type="number" id="wordCount" min="50" max="1000" required>
-        
-        <button type="submit">Generate Story</button>
-    </form>
-
-    <div id="loading">Loading...</div>
-    <div id="storyText"></div>
+    <div class="book">
+        <div class="page page-left">
+            <div class="content">
+                <h1>AI Story Generator</h1>
+                <form id="storyForm">
+                    <div class="form-group">
+                        <label for="genre">Genre</label>
+                        <select id="genre" required>
+                            <option value="">Select a genre</option>
+                            <option value="fantasy">Fantasy</option>
+                            <option value="sci-fi">Science Fiction</option>
+                            <option value="mystery">Mystery</option>
+                            <option value="romance">Romance</option>
+                            <option value="horror">Horror</option>
+                            <option value="adventure">Adventure</option>
+                            <option value="historical-fiction">Historical Fiction</option>
+                            <option value="thriller">Thriller</option>
+                            <option value="comedy">Comedy</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="words">Word Count</label>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <input type="range" id="wordsRange" min="100" max="1000" step="50" value="500">
+                            <input type="number" id="words" min="100" max="1000" step="50" value="500" required>
+                        </div>
+                    </div>
+                    <button type="submit">Generate Story</button>
+                </form>
+                <div class="credits">
+                    Created by - Bhavya Shah<br>
+                    <a href="https://bhavyashah7409.vercel.app" target="_blank">bhavyashah7409.vercel.app</a>
+                </div>
+            </div>
+        </div>
+        <div class="page page-right">
+            <div class="content">
+                <h2>Your Story</h2>
+                <div id="story"></div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        const form = document.getElementById('storyForm');
-        const loadingIndicator = document.getElementById('loading');
-        const storyTextDiv = document.getElementById('storyText');
+        document.addEventListener('DOMContentLoaded', () => {
+            const storyForm = document.getElementById('storyForm');
+            const storyElement = document.getElementById('story');
+            const wordsRange = document.getElementById('wordsRange');
+            const wordsInput = document.getElementById('words');
+            const pageRight = document.querySelector('.page-right');
 
-        loadingIndicator.style.display = 'none';
+            // Sync range and number inputs
+            wordsRange.addEventListener('input', () => wordsInput.value = wordsRange.value);
+            wordsInput.addEventListener('input', () => wordsRange.value = wordsInput.value);
 
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent form submission
-            const genre = document.getElementById('genre').value;
-            const words = document.getElementById('wordCount').value;
+            storyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const genre = document.getElementById('genre').value;
+                const words = wordsInput.value;
 
-            if (!genre || words < 50 || words > 1000) {
-                alert('Please select a genre and provide a word count between 50 and 1000.');
-                return;
-            }
+                storyElement.textContent = 'Generating your story...';
 
-            storyTextDiv.style.display = 'none';
-            loadingIndicator.style.display = 'block';
+                try {
+                    const response = await fetch('/generate-story', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ genre, words }),
+                    });
 
-            const requestBody = { genre, words };
+                    if (!response.ok) {
+                        throw new Error('Failed to generate story');
+                    }
 
-            try {
-                const response = await fetch('http://localhost:3000/generate-story', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (response.ok) {
                     const data = await response.json();
-                    storyTextDiv.innerText = data.story;
-                    storyTextDiv.style.display = 'block';
-                } else {
-                    const errorData = await response.json();
-                    alert(errorData.error || 'An unknown error occurred.');
+                    storyElement.textContent = data.story;
+                } catch (error) {
+                    storyElement.textContent = 'Error: ' + error.message;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('There was an error generating the story. Please try again.');
-            } finally {
-                loadingIndicator.style.display = 'none';
-            }
+            });
         });
     </script>
-
 </body>
 </html>
