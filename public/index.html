@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaleCraft</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora&display=swap');
+
+        body {
+            font-family: 'Lora', serif;
+            background: #f0e6d2;
+            color: #3a3a3a;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .book {
+            width: 800px;
+            height: 600px;
+            background: #f9f3e3;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            height: 100%;
+            width: 2px;
+            background: rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .page {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            background: 
+                linear-gradient(to right, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 10%),
+                linear-gradient(to left, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 10%);
+        }
+
+        /* Custom Scrollbar Styles */
+        .page::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .page::-webkit-scrollbar-track {
+            background: #e6d8c0;
+            border-radius: 4px;
+        }
+
+        .page::-webkit-scrollbar-thumb {
+            background: #8b4513;
+            border-radius: 4px;
+        }
+
+        .page::-webkit-scrollbar-thumb:hover {
+            background: #6b3100;
+        }
+
+        /* For Firefox */
+        .page {
+            scrollbar-width: thin;
+            scrollbar-color: #8b4513 #e6d8c0;
+        }
+
+        .page-left { left: 0; }
+        .page-right { right: 0; }
+
+        .content { max-width: 100%; }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            color: #2c1e0f;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+
+        .form-group { margin-bottom: 1rem; }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        select, input[type="number"], input[type="range"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #8b4513;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover { background-color: #6b3100; }
+
+        #story {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-align: justify;
+            white-space: pre-wrap; /* Preserves line breaks */
+        }
+
+        .credits {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            text-align: center;
+            color: #555;
+        }
+
+        .credits a {
+            color: #8b4513;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .credits a:hover { text-decoration: underline; }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 840px) {
+            .book { width: 90vw; height: 80vh; }
+        }
+
+        @media (max-width: 480px) {
+            .book { width: 95vw; height: 90vh; }
+            .page { padding: 20px; }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="book">
+        <div class="page page-left">
+            <div class="content">
+                <h1>TaleCraft</h1>
+                <form id="storyForm">
+                    <div class="form-group">
+                        <label for="genre">Genre</label>
+                        <select id="genre" required>
+                            <option value="">Select a genre</option>
+                            <option value="fantasy">Fantasy</option>
+                            <option value="sci-fi">Science Fiction</option>
+                            <option value="mystery">Mystery</option>
+                            <option value="romance">Romance</option>
+                            <option value="horror">Horror</option>
+                            <option value="adventure">Adventure</option>
+                            <option value="historical-fiction">Historical Fiction</option>
+                            <option value="thriller">Thriller</option>
+                            <option value="comedy">Comedy</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="words">Word Count</label>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <input type="range" id="wordsRange" min="100" max="1000" step="50" value="500">
+                            <input type="number" id="words" min="100" max="1000" step="50" value="500" required>
+                        </div>
+                    </div>
+                    <button type="submit">Generate Story</button>
+                </form>
+                <div class="credits">
+                    Created by - Bhavya Shah<br>
+                    <a href="https://bhavyashah7409.vercel.app" target="_blank">bhavyashah7409.vercel.app</a>
+                </div>
+            </div>
+        </div>
+        <div class="page page-right">
+            <div class="content">
+                <h2>Your Story</h2>
+                <div id="story"></div>
+                <div class="btn-container">
+                    <button id="readStory">Read Story</button>
+                    <button id="stopReading">Stop Reading</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const storyForm = document.getElementById('storyForm');
+            const storyElement = document.getElementById('story');
+            const wordsRange = document.getElementById('wordsRange');
+            const wordsInput = document.getElementById('words');
+            const readButton = document.getElementById('readStory');
+            const stopButton = document.getElementById('stopReading');
+            let synth = window.speechSynthesis;
+            let utterance;
+
+            readButton.style.display = 'none';
+            stopButton.style.display = 'none';
+
+            wordsRange.addEventListener('input', () => wordsInput.value = wordsRange.value);
+            wordsInput.addEventListener('input', () => wordsRange.value = wordsInput.value);
+
+            storyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const genre = document.getElementById('genre').value;
+                const words = wordsInput.value;
+
+                storyElement.textContent = 'Generating your story...';
+                readButton.style.display = 'none';
+                stopButton.style.display = 'none';
+
+                try {
+                    const response = await fetch('/generate-story', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ genre, words }),
+                    });
+
+                    if (!response.ok) throw new Error('Failed to generate story');
+
+                    const data = await response.json();
+                    storyElement.textContent = data.story;
+
+                    readButton.style.display = 'block';
+                } catch (error) {
+                    storyElement.textContent = 'Error: ' + error.message;
+                }
+            });
+
+            readButton.addEventListener('click', () => {
+                utterance = new SpeechSynthesisUtterance(storyElement.textContent);
+                synth.speak(utterance);
+                readButton.style.display = 'none';
+                stopButton.style.display = 'block';
+            });
+
+            stopButton.addEventListener('click', () => {
+                synth.cancel();
+                stopButton.style.display = 'none';
+                readButton.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
