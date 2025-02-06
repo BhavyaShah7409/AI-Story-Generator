@@ -1,4 +1,4 @@
-![ss1](https://github.com/user-attachments/assets/451371c5-7590-404b-9085-27722c82f0c8)
+![ss1](https://github.com/BhavyaShah7409/ai-story-generator/blob/main/public/front_end.png?raw=true)
 # TaleCraft (AI Story Generator)
 
 TaleCraft is a Node.js-based project that allows users to generate AI-powered stories based on their selected genre and word count. The website provides an intuitive interface for user input, and the backend leverages Google's GEMINI API to generate engaging stories.
